@@ -73,5 +73,9 @@ final class PersonBrowserUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["Couldn’t load people"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.buttons["Retry"].exists)
+        app.buttons["Retry"].tap()
+        XCTAssertTrue(app.staticTexts["Couldn’t load people"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.buttons["Retry"].exists)
+        XCTAssertFalse(app.staticTexts["Loading people…"].exists)
     }
 }

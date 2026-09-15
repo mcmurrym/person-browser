@@ -6,7 +6,6 @@ struct PortraitView: View {
     let size: CGFloat
     @Environment(\.displayScale) private var displayScale
     @State private var model: PortraitViewModel
-    @State private var retry = 0
     @State private var showsError = false
 
     init(url: URL, name: String, size: CGFloat, loader: any PortraitLoading) {
@@ -16,8 +15,12 @@ struct PortraitView: View {
         _model = State(initialValue: PortraitViewModel(loader: loader))
     }
 
+    private var request: PortraitRequest {
+        PortraitRequest(url: url, pixels: Int(size * displayScale))
+    }
+
     var body: some View {
-        Group {
+        ZStack {
             switch model.state {
             case .initial, .loading:
                 ProgressView().accessibilityLabel("Loading portrait of \(name)")
@@ -40,11 +43,10 @@ struct PortraitView: View {
         .frame(width: size, height: size)
         .background(.quaternary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .task(id: "\(url.absoluteString)-\(size)-\(displayScale)-\(retry)") {
-            await model.load(url: url, pixels: Int(size * displayScale))
-        }
+        .task(id: request) { model.load(request) }
+        .onDisappear { model.cancel() }
         .alert("Portrait unavailable", isPresented: $showsError) {
-            Button("Retry") { retry += 1 }
+            Button("Retry") { model.load(request) }
             Button("Cancel", role: .cancel) {}
         } message: {
             if case .error(let error) = model.state { Text(error.localizedDescription) }

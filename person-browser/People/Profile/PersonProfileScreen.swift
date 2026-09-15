@@ -3,7 +3,6 @@ import SwiftUI
 struct PersonProfileScreen: View {
     private let portraits: any PortraitLoading
     @State private var model: PersonProfileViewModel
-    @State private var retry = 0
 
     init(id: String, repository: any PeopleRepository, portraits: any PortraitLoading) {
         self.portraits = portraits
@@ -11,20 +10,21 @@ struct PersonProfileScreen: View {
     }
 
     var body: some View {
-        Group {
+        ZStack {
             switch model.state {
             case .initial, .loading:
                 ProgressView("Loading profile…")
             case .error(let error):
-                LoadFailureView(title: "Couldn’t load profile", error: error) { retry += 1 }
+                LoadFailureView(title: "Couldn’t load profile", error: error) { model.load() }
             case .success(let person):
                 profile(person)
-                    .refreshable { await model.load() }
+                    .refreshable { await model.refresh() }
             }
         }
         .navigationTitle(model.state.value?.name ?? "Profile")
         .navigationBarTitleDisplayMode(.inline)
-        .task(id: retry) { await model.load() }
+        .task { model.load() }
+        .onDisappear { model.cancel() }
     }
 
     private func profile(_ person: Person) -> some View {
@@ -77,12 +77,12 @@ struct PersonProfileScreen: View {
                         }
                     }
                 }
-                Section { RefreshStatusView(state: model.refreshState) { retry += 1 } }
+                Section { RefreshStatusView(state: model.refreshState) { model.load() } }
             } else {
                 Section {
                     switch model.refreshState {
                     case .error(let error):
-                        LoadFailureView(title: "Profile details unavailable", error: offlineError(error)) { retry += 1 }
+                        LoadFailureView(title: "Profile details unavailable", error: offlineError(error)) { model.load() }
                     default:
                         ProgressView("Loading profile details…")
                     }

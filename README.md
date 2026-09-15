@@ -26,6 +26,8 @@ Screens render `DataLoadState<Value>` and forward actions; they do not import Sw
 - `.success([])` represents an empty list; `.error` represents failure without usable content.
 - Cancellation restores a retryable state without displaying an error.
 
+Initial loading starts from each view’s `.task`. Retry buttons call a synchronous `model.load()` action; the model owns its task and updates state on the main actor. View disappearance cancels the model’s work, and a replacement load cannot be overwritten by an obsolete result. Pull-to-refresh awaits `model.refresh()` so the native spinner lasts for the operation. Portrait task identity tracks the actual URL and pixel size, never a retry counter.
+
 The generic loading state has no `Codable` constraint because rendering does not require serialization. Domain values are snapshots: repository responses explicitly update the view model. This app does not depend on `@Query` or automatic database observation. Screens refresh on entry and support pull-to-refresh.
 
 ### Network and persistence boundaries
@@ -52,7 +54,7 @@ An image is offline-ready after its download and save complete. Force-quitting w
 
 ## Verification
 
-**Results:** A fresh local clone built and launched successfully without configuration edits. 14 focused tests and 3 UI tests passed on the iPhone 17 simulator running iOS 27.0. Large-text screenshots were inspected, including adaptive list rows; dark appearance and standard back navigation are covered by the UI checks.
+**Results:** A fresh local clone built and launched successfully without configuration edits. 15 focused tests and 3 UI tests passed on the iPhone 17 simulator running iOS 27.0. Large-text screenshots were inspected, including adaptive list rows; dark appearance and standard back navigation are covered by the UI checks.
 
 The focused tests cover decoding, nullable fields, display dates, malformed responses, HTTP errors, state transitions, retry/cancellation, preservation of profile details during list refresh, direct ID lookup, valid empty lists, save failures, image validation, and reopening disk-backed records and portraits without a working network.
 

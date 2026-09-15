@@ -62,6 +62,38 @@ private actor StubRepository: PeopleRepository {
     }
 }
 
+// Intentionally ignores cancellation so the view model must reject an obsolete result.
+private actor ControlledRepository: PeopleRepository {
+    private var requests: [Int: CheckedContinuation<[Person], Error>] = [:]
+    private var count = 0
+    private var waiters: [(Int, CheckedContinuation<Void, Never>)] = []
+
+    func savedPeople() -> [Person]? { nil }
+    func savedPerson(id: String) -> Person? { nil }
+    func refreshPeople() async throws -> [Person] {
+        let index = count
+        count += 1
+        return try await withCheckedThrowingContinuation { continuation in
+            requests[index] = continuation
+            let ready = waiters.filter { $0.0 <= count }
+            waiters.removeAll { $0.0 <= count }
+            for (_, waiter) in ready { waiter.resume() }
+        }
+    }
+    func refreshPerson(id: String) async throws -> Person {
+        let values = try await refreshPeople()
+        guard let person = values.first else { throw BrowserError.invalidResponse }
+        return person
+    }
+    func waitForRequests(_ expected: Int) async {
+        if count >= expected { return }
+        await withCheckedContinuation { waiters.append((expected, $0)) }
+    }
+    func resolve(_ index: Int, result: Result<[Person], Error>) {
+        requests.removeValue(forKey: index)?.resume(with: result)
+    }
+}
+
 private actor FailingStore: PeopleStore {
     func savedPeople() -> [Person]? { nil }
     func person(id: String) -> Person? { nil }
@@ -151,10 +183,10 @@ struct PersonBrowserTests {
         let repository = StubRepository(result: .failure(URLError(.notConnectedToInternet)))
         let model = PeopleViewModel(repository: repository)
         guard case .initial = model.state else { Issue.record("Expected initial"); return }
-        await model.load()
+        await model.refresh()
         guard case .error = model.state else { Issue.record("Expected first-launch error"); return }
         await repository.configure(result: .success([]))
-        await model.load()
+        await model.refresh()
         #expect(model.state.value == [])
     }
 
@@ -162,7 +194,7 @@ struct PersonBrowserTests {
         let saved = try people()
         let repository = StubRepository(saved: saved, result: .failure(URLError(.notConnectedToInternet)))
         let model = PeopleViewModel(repository: repository)
-        await model.load()
+        await model.refresh()
         #expect(model.state.value == saved)
         guard case .error = model.refreshState else { Issue.record("Expected refresh error"); return }
     }
@@ -171,11 +203,11 @@ struct PersonBrowserTests {
         let full = try profile()
         let repository = StubRepository(saved: [full], result: .failure(URLError(.notConnectedToInternet)))
         let model = PersonProfileViewModel(id: full.id, repository: repository)
-        await model.load()
+        await model.refresh()
         #expect(model.state.value?.details == full.details)
         let summary = try #require(people().first)
         let partial = PersonProfileViewModel(id: summary.id, repository: StubRepository(saved: [summary], result: .failure(URLError(.notConnectedToInternet))))
-        await partial.load()
+        await partial.refresh()
         #expect(partial.state.value == summary)
         guard case .error = partial.refreshState else { Issue.record("Expected incomplete profile refresh error"); return }
     }
@@ -184,14 +216,33 @@ struct PersonBrowserTests {
         let repository = StubRepository(result: .success([]))
         await repository.configure(result: .success([]), delays: true)
         let model = PeopleViewModel(repository: repository)
-        let task = Task { await model.load() }
+        model.load()
         while case .initial = model.state { await Task.yield() }
-        task.cancel()
-        await task.value
+        model.cancel()
         guard case .initial = model.state else { Issue.record("Cancellation should restore initial"); return }
         await repository.configure(result: .success([]))
-        await model.load()
+        await model.refresh()
         #expect(model.state.value == [])
+    }
+
+    @Test @MainActor func obsoleteRetryCannotReplaceNewerSuccess() async throws {
+        let repository = ControlledRepository()
+        let model = PeopleViewModel(repository: repository)
+        let first = Task { await model.refresh() }
+        await repository.waitForRequests(1)
+        let second = Task { await model.refresh() }
+        await repository.waitForRequests(2)
+        let current = try people()
+        await repository.resolve(1, result: .success(current))
+        await second.value
+        #expect(model.state.value == current)
+        await repository.resolve(0, result: .failure(BrowserError.invalidResponse))
+        await first.value
+        #expect(model.state.value == current)
+        guard case .success = model.refreshState else {
+            Issue.record("An obsolete failure must not change the current refresh state")
+            return
+        }
     }
 
     @Test func repositorySurfacesSaveFailure() async throws {

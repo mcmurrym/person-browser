@@ -8,24 +8,38 @@ final class PersonProfileViewModel {
     private(set) var refreshState: VoidDataLoadState = .initial
     private let id: String
     private let repository: any PeopleRepository
-    private var isRunning = false
+    @ObservationIgnored private var loadTask: Task<Void, Never>?
 
     init(id: String, repository: any PeopleRepository) {
         self.id = id
         self.repository = repository
     }
 
-    func load() async {
-        guard !isRunning else { return }
-        isRunning = true
-        defer { isRunning = false }
+    func load() {
+        loadTask?.cancel()
+        loadTask = Task { await performLoad() }
+    }
+
+    func refresh() async {
+        load()
+        await loadTask?.value
+    }
+
+    func cancel() {
+        loadTask?.cancel()
+        loadTask = nil
+        if state.value == nil { state = .initial }
+        refreshState = .initial
+    }
+
+    private func performLoad() async {
+        guard !Task.isCancelled else { return }
         do {
             if state.value == nil {
                 state = .loading
-                if let person = try await repository.savedPerson(id: id) {
-                    try Task.checkCancellation()
-                    state = .success(person)
-                }
+                let person = try await repository.savedPerson(id: id)
+                try Task.checkCancellation()
+                if let person { state = .success(person) }
             }
             if state.value != nil { refreshState = .loading }
             let person = try await repository.refreshPerson(id: id)
@@ -33,7 +47,9 @@ final class PersonProfileViewModel {
             state = .success(person)
             refreshState = .success
         } catch {
-            if isCancellation(error) || Task.isCancelled {
+            // A replaced task must not overwrite its successor's state.
+            guard !Task.isCancelled else { return }
+            if isCancellation(error) {
                 if state.value == nil { state = .initial }
                 refreshState = .initial
             } else if state.value != nil {
