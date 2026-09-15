@@ -13,8 +13,6 @@ A small native iPhone app for browsing records and navigating relatives, includi
 3. **Open the project in Xcode.** Choose **File → Open** and select `person-browser.xcodeproj` from the cloned repository.
 4. **Run the app.** Select the **person-browser** scheme and an installed **iPhone simulator** in the toolbar, then press **Run (⌘R)**. Use an internet connection for the first launch to download people and portraits; successfully saved content remains available offline.
 
-No third-party packages, API keys, or app account are required. The project uses **Swift 6 language mode**. Running on a physical iPhone requires selecting your own signing team.
-
 ### Run tests
 
 Use **Product → Test (⌘U)** to run the tests. Unit tests use bundled fixtures and isolated temporary SwiftData databases.
