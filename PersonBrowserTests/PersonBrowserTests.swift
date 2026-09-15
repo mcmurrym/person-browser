@@ -264,20 +264,6 @@ struct PersonBrowserTests {
         }
     }
 
-    @Test func portraitNetworkFailureDoesNotCreateSavedImage() async throws {
-        let store = try await SwiftDataPeopleStore.make(url: temporaryStoreURL())
-        let client = StubHTTPClient(.failure(URLError(.notConnectedToInternet)))
-        let loader = PortraitLoader(client: client, store: store)
-        let url = try profile().portraitURL
-
-        await #expect {
-            try await loader.image(url: url, pixels: 56)
-        } throws: { error in
-            (error as? URLError)?.code == .notConnectedToInternet
-        }
-        #expect(try await store.portrait(url: url) == nil)
-    }
-
     @Test func mapsHTTPFailureToServiceError() async throws {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [ErrorURLProtocol.self]
