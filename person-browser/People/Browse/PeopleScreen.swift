@@ -21,17 +21,22 @@ struct PeopleScreen: View {
                     LoadFailureView(title: "Couldn’t load people", error: error) { model.load() }
                 case .success(let people):
                     List {
-                        RefreshStatusView(state: model.refreshState) { model.load() }
-                        if people.isEmpty {
-                            ContentUnavailableView("No people", systemImage: "person.2", description: Text("There are no people to display."))
-                        }
-                        ForEach(people) { person in
-                            NavigationLink(value: person.id) {
-                                PersonRowView(person: person, portraits: portraits)
+                        Section {
+                            if people.isEmpty {
+                                ContentUnavailableView("No people", systemImage: "person.2", description: Text("There are no people to display."))
                             }
+                            ForEach(people) { person in
+                                NavigationLink(value: person.id) {
+                                    PersonRowView(person: person, portraits: portraits)
+                                }
+                            }
+                        } header: {
+                            RefreshStatusView(state: model.refreshState) { model.load() }
+                                .listRowInsets(EdgeInsets())
                         }
                     }
                     .refreshable { await model.refresh() }
+                    .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle("People")

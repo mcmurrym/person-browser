@@ -44,6 +44,8 @@ The store has three schema models:
 
 Profile-only details are encoded into a per-person payload. This keeps the ordered relatives and citations simple for 16 people; it is not a separately queryable family graph. List updates preserve that payload. Saving a new list updates membership/order but retains previously opened profiles. Writes explicitly save or roll back; save failures are surfaced instead of claiming offline availability. A store-opening failure shows Retry and does not erase the database or fall back to volatile storage.
 
+Connectivity monitoring uses `NWPathMonitor` through an injectable interface. Active list and profile view models observe path changes, preserve saved content on disconnect, and refresh when a path returns. Monitoring stops when the screen leaves. An unavailable path shows “You’re offline”; request timeouts and connection failures show “Couldn’t reach the server.” A usable path is not proof that the service is reachable: 100% packet loss can still require the existing 20-second request timeout before reporting failure.
+
 ### Portraits: persistence and display are separate
 
 SwiftData stores original portrait bytes using `@Attribute(.externalStorage)`. The custom loader reads those records before requesting the network, validates downloaded image data, saves it, and prepares a thumbnail for the displayed size. List and profile reuse the same original bytes. Person queries do not fetch portrait bytes.

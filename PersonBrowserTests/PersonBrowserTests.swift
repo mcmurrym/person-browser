@@ -40,6 +40,7 @@ private actor StubHTTPClient: HTTPClient {
 private actor StubRepository: PeopleRepository {
     let saved: [Person]?
     var result: Result<[Person], Error>
+    private(set) var refreshCount = 0
     var delays = false
     init(saved: [Person]? = nil, result: Result<[Person], Error>) {
         self.saved = saved
@@ -52,6 +53,7 @@ private actor StubRepository: PeopleRepository {
     func savedPeople() -> [Person]? { saved }
     func savedPerson(id: String) -> Person? { saved?.first { $0.id == id } }
     func refreshPeople() async throws -> [Person] {
+        refreshCount += 1
         if delays { try await Task.sleep(for: .seconds(30)) }
         return try result.get()
     }
@@ -181,7 +183,7 @@ struct PersonBrowserTests {
 
     @Test @MainActor func initialFailureCanRetryToEmptySuccess() async {
         let repository = StubRepository(result: .failure(URLError(.notConnectedToInternet)))
-        let model = PeopleViewModel(repository: repository)
+        let model = PeopleViewModel(repository: repository, connectivity: SilentConnectivity())
         guard case .initial = model.state else { Issue.record("Expected initial"); return }
         await model.refresh()
         guard case .error = model.state else { Issue.record("Expected first-launch error"); return }
@@ -193,7 +195,7 @@ struct PersonBrowserTests {
     @Test @MainActor func offlineRefreshKeepsSavedContent() async throws {
         let saved = try people()
         let repository = StubRepository(saved: saved, result: .failure(URLError(.notConnectedToInternet)))
-        let model = PeopleViewModel(repository: repository)
+        let model = PeopleViewModel(repository: repository, connectivity: SilentConnectivity())
         await model.refresh()
         #expect(model.state.value == saved)
         guard case .error = model.refreshState else { Issue.record("Expected refresh error"); return }
@@ -202,11 +204,11 @@ struct PersonBrowserTests {
     @Test @MainActor func cachedProfileAndPartialSummarySurviveOfflineFailure() async throws {
         let full = try profile()
         let repository = StubRepository(saved: [full], result: .failure(URLError(.notConnectedToInternet)))
-        let model = PersonProfileViewModel(id: full.id, repository: repository)
+        let model = PersonProfileViewModel(id: full.id, repository: repository, connectivity: SilentConnectivity())
         await model.refresh()
         #expect(model.state.value?.details == full.details)
         let summary = try #require(people().first)
-        let partial = PersonProfileViewModel(id: summary.id, repository: StubRepository(saved: [summary], result: .failure(URLError(.notConnectedToInternet))))
+        let partial = PersonProfileViewModel(id: summary.id, repository: StubRepository(saved: [summary], result: .failure(URLError(.notConnectedToInternet))), connectivity: SilentConnectivity())
         await partial.refresh()
         #expect(partial.state.value == summary)
         guard case .error = partial.refreshState else { Issue.record("Expected incomplete profile refresh error"); return }
@@ -215,7 +217,7 @@ struct PersonBrowserTests {
     @Test @MainActor func cancellationDoesNotBecomeFailureAndRemainsRetryable() async {
         let repository = StubRepository(result: .success([]))
         await repository.configure(result: .success([]), delays: true)
-        let model = PeopleViewModel(repository: repository)
+        let model = PeopleViewModel(repository: repository, connectivity: SilentConnectivity())
         model.load()
         while case .initial = model.state { await Task.yield() }
         model.cancel()
@@ -227,7 +229,7 @@ struct PersonBrowserTests {
 
     @Test @MainActor func obsoleteRetryCannotReplaceNewerSuccess() async throws {
         let repository = ControlledRepository()
-        let model = PeopleViewModel(repository: repository)
+        let model = PeopleViewModel(repository: repository, connectivity: SilentConnectivity())
         let first = Task { await model.refresh() }
         await repository.waitForRequests(1)
         let second = Task { await model.refresh() }
@@ -285,4 +287,91 @@ private final class ErrorURLProtocol: URLProtocol, @unchecked Sendable {
         client?.urlProtocolDidFinishLoading(self)
     }
     override func stopLoading() {}
+}
+
+private struct SilentConnectivity: ConnectivityMonitoring {
+    func updates() -> AsyncStream<ConnectivityStatus> { AsyncStream { $0.finish() } }
+}
+
+private struct ControlledConnectivity: ConnectivityMonitoring {
+    let stream: AsyncStream<ConnectivityStatus>
+    let continuation: AsyncStream<ConnectivityStatus>.Continuation
+
+    init() {
+        (stream, continuation) = AsyncStream.makeStream()
+    }
+    func updates() -> AsyncStream<ConnectivityStatus> { stream }
+}
+
+@MainActor
+private func waitUntil(_ condition: () -> Bool) async throws {
+    let deadline = ContinuousClock.now + .seconds(3)
+    while !condition(), ContinuousClock.now < deadline {
+        try await Task.sleep(for: .milliseconds(10))
+    }
+    #expect(condition())
+}
+
+extension PersonBrowserTests {
+    @Test @MainActor func disconnectKeepsSavedPeopleAndReconnectRefreshes() async throws {
+        let saved = try people()
+        let repository = StubRepository(saved: saved, result: .success(saved))
+        let connectivity = ControlledConnectivity()
+        let model = PeopleViewModel(repository: repository, connectivity: connectivity)
+        defer { model.cancel(); connectivity.continuation.finish() }
+        await model.refresh()
+        await repository.configure(result: .success([]), delays: true)
+        model.load()
+        connectivity.continuation.yield(.offline)
+        try await waitUntil {
+            if case .error(let error) = model.refreshState {
+                return (error as? URLError)?.code == .notConnectedToInternet
+            }
+            return false
+        }
+        #expect(model.state.value == saved)
+        let count = await repository.refreshCount
+        await model.refresh()
+        #expect(await repository.refreshCount == count)
+        await repository.configure(result: .success([]))
+        connectivity.continuation.yield(.online)
+        try await waitUntil { model.state.value == [] }
+    }
+
+    @Test @MainActor func profileReconnectRefreshesAndCancellationStopsMonitoring() async throws {
+        let full = try profile()
+        let repository = StubRepository(saved: [full], result: .failure(URLError(.timedOut)))
+        let connectivity = ControlledConnectivity()
+        let model = PersonProfileViewModel(id: full.id, repository: repository, connectivity: connectivity)
+        defer { model.cancel(); connectivity.continuation.finish() }
+        await model.refresh()
+        #expect(model.state.value == full)
+        connectivity.continuation.yield(.offline)
+        try await waitUntil {
+            if case .error(let error) = model.refreshState {
+                return (error as? URLError)?.code == .notConnectedToInternet
+            }
+            return false
+        }
+        await repository.configure(result: .success([full]))
+        connectivity.continuation.yield(.online)
+        try await waitUntil {
+            if case .success = model.refreshState { return true }
+            return false
+        }
+        model.cancel()
+        let count = await repository.refreshCount
+        connectivity.continuation.yield(.offline)
+        connectivity.continuation.yield(.online)
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(await repository.refreshCount == count)
+    }
+
+    @Test func offlineAndTimeoutHaveDistinctMessages() {
+        let offline = RefreshFailureMessage(error: URLError(.notConnectedToInternet))
+        let timeout = RefreshFailureMessage(error: URLError(.timedOut))
+        #expect(offline.title == "You’re offline")
+        #expect(timeout.title == "Couldn’t reach the server")
+        #expect(RefreshFailureMessage(error: BrowserError.persistence).title == "Couldn’t update saved content")
+    }
 }

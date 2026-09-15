@@ -19,6 +19,7 @@ struct PersonProfileScreen: View {
             case .success(let person):
                 profile(person)
                     .refreshable { await model.refresh() }
+
             }
         }
         .navigationTitle(model.state.value?.name ?? "Profile")
@@ -37,6 +38,11 @@ struct PersonProfileScreen: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
+            } header: {
+                if person.details != nil {
+                    RefreshStatusView(state: model.refreshState) { model.load() }
+                        .listRowInsets(EdgeInsets())
+                }
             }
             Section("Birth") {
                 Text(person.birth.date)
@@ -77,7 +83,6 @@ struct PersonProfileScreen: View {
                         }
                     }
                 }
-                Section { RefreshStatusView(state: model.refreshState) { model.load() } }
             } else {
                 Section {
                     switch model.refreshState {
@@ -89,6 +94,7 @@ struct PersonProfileScreen: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
     }
 
     private func offlineError(_ error: Error) -> Error {

@@ -8,14 +8,19 @@ final class PersonProfileViewModel {
     private(set) var refreshState: VoidDataLoadState = .initial
     private let id: String
     private let repository: any PeopleRepository
+    private let connectivity: any ConnectivityMonitoring
+    @ObservationIgnored private var connectivityTask: Task<Void, Never>?
+    @ObservationIgnored private var connectivityStatus: ConnectivityStatus?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
 
-    init(id: String, repository: any PeopleRepository) {
+    init(id: String, repository: any PeopleRepository, connectivity: any ConnectivityMonitoring = NetworkConnectivity()) {
+        self.connectivity = connectivity
         self.id = id
         self.repository = repository
     }
 
     func load() {
+        observeConnectivity()
         loadTask?.cancel()
         loadTask = Task { await performLoad() }
     }
@@ -26,10 +31,34 @@ final class PersonProfileViewModel {
     }
 
     func cancel() {
+        connectivityTask?.cancel()
+        connectivityTask = nil
+        connectivityStatus = nil
         loadTask?.cancel()
         loadTask = nil
         if state.value == nil { state = .initial }
         refreshState = .initial
+    }
+
+    private func observeConnectivity() {
+        guard connectivityTask == nil else { return }
+        let updates = connectivity.updates()
+        connectivityTask = Task { [weak self] in
+            for await status in updates {
+                guard Task.isNotCancelled else { return }
+                self?.connectivityChanged(status)
+            }
+        }
+    }
+
+    private func connectivityChanged(_ status: ConnectivityStatus) {
+        let previous = connectivityStatus
+        connectivityStatus = status
+        guard previous != status else { return }
+        if status == .offline || previous == .offline {
+            // Replace an in-flight request on disconnect; reload saved data before reporting offline.
+            load()
+        }
     }
 
     private func performLoad() async {
@@ -41,6 +70,7 @@ final class PersonProfileViewModel {
                 try Task.checkCancellation()
                 if let person { state = .success(person) }
             }
+            guard connectivityStatus != .offline else { throw URLError(.notConnectedToInternet) }
             if state.value != nil { refreshState = .loading }
             let person = try await repository.refreshPerson(id: id)
             try Task.checkCancellation()
