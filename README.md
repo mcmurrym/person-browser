@@ -18,7 +18,7 @@ No third-party packages, API keys, or app account are required. The project uses
 
 ### Run tests
 
-Use **Product → Test (⌘U)** to run the tests. Unit tests use bundled fixtures and isolated temporary SwiftData databases. The UI browsing test uses the public sample service for its initial online phase.
+Use **Product → Test (⌘U)** to run the tests. Unit tests use bundled fixtures and isolated temporary SwiftData databases.
 
 ## Decisions and tradeoffs
 
@@ -97,6 +97,7 @@ With saved content, the offline message is a nonblocking warning. Without conten
 - I am okay that the agent built the majority of the app, but if I am imagining this is an app I am working on as a team, I'd ensure we have patterns we agree on which include guardrails for the agent. 
 - I'd set a cyclomatic complexity rule (with swiftlint), this keeps an agent from running away on a function and making it overly complicated. Which in turn makes the code simpler to understand for both agent and human alike. I'm  not sure any function is too complex in this sample app, but the agent can ruin things fast.
 - The app is complete per the assignment, but lacks ui appeal, and is especially unpolished around loading and offline.
+- `PersonResponse` is filling 2 roles as both a summary object and a full profile object. This means we have optionals like `biography: String?` So when downloading a full profile we have to runtime validate that the biography is not null, I'd rather have `PersonResponse` and `PersonSummaryResponse` to eliminate the runtime check. so right now, we need a unit test to make sure we don't break this situation.
 
 
 

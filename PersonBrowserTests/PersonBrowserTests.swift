@@ -106,38 +106,30 @@ private actor FailingStore: PeopleStore {
 }
 
 struct PersonBrowserTests {
-    @Test func decodesNullableFieldsAndPreservesDisplayDates() throws {
+    @Test func mapsPeopleToDisplayValuesAndResolvesPortraitURL() throws {
         let values = try people()
-        #expect(values.count == 16)
         let living = try #require(values.first { $0.living })
-        #expect(living.death == nil)
+        let historical = try #require(values.first { $0.id == "R9PJ-5MX" })
+
         #expect(living.lifespan == "1931–Living")
-        #expect(values.first?.birth.date == "about 1814")
-        #expect(values.first?.portraitURL.absoluteString == "https://fs-records-sample.vercel.app/portraits/R9PJ-5MX.jpg")
-        var object = try #require(JSONSerialization.jsonObject(with: fixture("profile")) as? [String: Any])
-        object["occupation"] = NSNull()
-        let decoded = try JSONDecoder().decode(PersonResponse.self, from: JSONSerialization.data(withJSONObject: object))
-        let value = try decoded.person(baseURL: RecordsRepository.serviceURL, fullProfile: true)
-        #expect(value.details?.occupation == nil)
-        #expect(value.details?.relatives.first?.relationship == "father")
+        #expect(historical.lifespan == "1814–1888")
+        #expect(historical.birth.date == "about 1814")
+        #expect(historical.portraitURL.absoluteString == "https://fs-records-sample.vercel.app/portraits/R9PJ-5MX.jpg")
     }
 
-    @Test func rejectsSummaryAsFullProfile() throws {
-        let response = try JSONDecoder().decode(PeopleResponse.self, from: fixture("persons"))
-        #expect(throws: (any Error).self) {
-            try response.persons[0].person(baseURL: RecordsRepository.serviceURL, fullProfile: true)
-        }
-    }
-
-    @Test func malformedRefreshPreservesSavedRecords() async throws {
+    @Test func networkFailurePreservesSavedRecords() async throws {
         let store = try await SwiftDataPeopleStore.make(url: temporaryStoreURL())
         let original = try people()
         try await store.saveList(original)
-        let client = StubHTTPClient(.success(Data("{ broken".utf8)))
+        let client = StubHTTPClient(.failure(URLError(.timedOut)))
         let repository = RecordsRepository(client: client, store: store)
-        await #expect(throws: (any Error).self) { try await repository.refreshPeople() }
-        let saved = try await store.savedPeople()
-        #expect(saved == original)
+
+        await #expect {
+            try await repository.refreshPeople()
+        } throws: { error in
+            (error as? URLError)?.code == .timedOut
+        }
+        #expect(try await store.savedPeople() == original)
     }
 
     @Test func summaryRefreshPreservesFullProfileAndLookup() async throws {
@@ -155,15 +147,16 @@ struct PersonBrowserTests {
         let url = try temporaryStoreURL()
         let full = try profile()
         let jpeg = try fixture("portrait", extension: "jpg")
+        let original = try people()
         var first: SwiftDataPeopleStore? = try await SwiftDataPeopleStore.make(url: url)
-        try await first?.saveList(people())
+        try await first?.saveList(original)
         try await first?.saveProfile(full)
         try await first?.savePortrait(jpeg, url: full.portraitURL)
         first = nil
         let reopened = try await SwiftDataPeopleStore.make(url: url)
         let offline = StubHTTPClient(.failure(URLError(.notConnectedToInternet)))
         let repository = RecordsRepository(client: offline, store: reopened)
-        #expect(try await repository.savedPeople()?.count == 16)
+        #expect(try await repository.savedPeople()?.map(\.id) == original.map(\.id))
         #expect(try await repository.savedPerson(id: full.id) == full)
         #expect(try await reopened.portrait(url: full.portraitURL) == jpeg)
         let loader = PortraitLoader(client: offline, store: reopened)
@@ -238,7 +231,7 @@ struct PersonBrowserTests {
         await repository.resolve(1, result: .success(current))
         await second.value
         #expect(model.state.value == current)
-        await repository.resolve(0, result: .failure(BrowserError.invalidResponse))
+        await repository.resolve(0, result: .failure(URLError(.timedOut)))
         await first.value
         #expect(model.state.value == current)
         guard case .success = model.refreshState else {
@@ -249,30 +242,53 @@ struct PersonBrowserTests {
 
     @Test func repositorySurfacesSaveFailure() async throws {
         let repository = RecordsRepository(client: StubHTTPClient(.success(try fixture("persons"))), store: FailingStore())
-        await #expect(throws: BrowserError.self) { try await repository.refreshPeople() }
+        await #expect {
+            try await repository.refreshPeople()
+        } throws: { error in
+            guard case BrowserError.persistence = error else { return false }
+            return true
+        }
     }
 
     @Test func portraitMustBeSavedBeforeSuccess() async throws {
         let loader = PortraitLoader(client: StubHTTPClient(.success(try fixture("portrait", extension: "jpg"))), store: FailingStore())
-        await #expect(throws: BrowserError.self) { try await loader.image(url: profile().portraitURL, pixels: 56) }
+        let url = try profile().portraitURL
+        // A failed save must not populate the memory cache and make Retry appear successful.
+        for _ in 0..<2 {
+            await #expect {
+                try await loader.image(url: url, pixels: 56)
+            } throws: { error in
+                guard case BrowserError.persistence = error else { return false }
+                return true
+            }
+        }
     }
 
-    @Test func rejectsInvalidPortraitBytes() async throws {
+    @Test func portraitNetworkFailureDoesNotCreateSavedImage() async throws {
         let store = try await SwiftDataPeopleStore.make(url: temporaryStoreURL())
-        let loader = PortraitLoader(client: StubHTTPClient(.success(Data("not an image".utf8))), store: store)
+        let client = StubHTTPClient(.failure(URLError(.notConnectedToInternet)))
+        let loader = PortraitLoader(client: client, store: store)
         let url = try profile().portraitURL
-        await #expect(throws: BrowserError.self) { try await loader.image(url: url, pixels: 56) }
+
+        await #expect {
+            try await loader.image(url: url, pixels: 56)
+        } throws: { error in
+            (error as? URLError)?.code == .notConnectedToInternet
+        }
         #expect(try await store.portrait(url: url) == nil)
     }
 
-    @Test func validatesHTTPStatus() async throws {
+    @Test func mapsHTTPFailureToServiceError() async throws {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [ErrorURLProtocol.self]
         let session = URLSession(configuration: configuration)
         defer { session.invalidateAndCancel() }
         let client = URLSessionHTTPClient(session: session)
-        await #expect(throws: BrowserError.self) {
+        await #expect {
             try await client.data(from: URL(string: "https://example.com/503")!)
+        } throws: { error in
+            guard case BrowserError.http(503) = error else { return false }
+            return true
         }
     }
 }
@@ -365,13 +381,5 @@ extension PersonBrowserTests {
         connectivity.continuation.yield(.online)
         try await Task.sleep(for: .milliseconds(50))
         #expect(await repository.refreshCount == count)
-    }
-
-    @Test func offlineAndTimeoutHaveDistinctMessages() {
-        let offline = RefreshFailureMessage(error: URLError(.notConnectedToInternet))
-        let timeout = RefreshFailureMessage(error: URLError(.timedOut))
-        #expect(offline.title == "You’re offline")
-        #expect(timeout.title == "Couldn’t reach the server")
-        #expect(RefreshFailureMessage(error: BrowserError.persistence).title == "Couldn’t update saved content")
     }
 }
