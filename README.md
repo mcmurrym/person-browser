@@ -2,84 +2,133 @@
 
 A small native iPhone app for browsing records and navigating relatives, including previously loaded content offline.
 
-## Run
+## Getting started
 
-Open `person-browser.xcodeproj`, select the **person-browser** scheme and an iPhone simulator running **iOS 26.0 or newer**, and press Run. No packages, keys, setup tools, or account are required. The project uses **Swift 6 language mode**; development and validation used Xcode 27.0 RC. Running on a physical iPhone requires selecting your own signing team.
+1. **Clone the repository** on your Mac:
+  ```sh
+   git clone https://github.com/mcmurrym/person-browser.git
+   cd person-browser
+  ```
+2. **Install Xcode 26 or 27 if needed.** Download Xcode from the [Mac App Store](https://apps.apple.com/app/xcode/id497799835) or [Apple Developer Downloads](https://developer.apple.com/download/all/). Open it once and complete any first-launch component installation. Development and validation used **Xcode 27.0 RC**; Xcode 26 has not been separately verified.
+3. **Open the project in Xcode.** Choose **File → Open** and select `person-browser.xcodeproj` from the cloned repository.
+4. **Install an iPhone simulator runtime if needed.** In **Xcode → Settings → Components**, download an **iOS 26.0 or newer** simulator runtime supported by your Xcode version. You can also use the download option in Xcode’s run destination selector. See [Apple’s simulator installation guide](https://developer.apple.com/documentation/xcode/downloading-and-installing-additional-xcode-components).
+5. **Run the app.** Select the **person-browser** scheme and an installed **iPhone simulator** in the toolbar, then press **Run (⌘R)**. Use an internet connection for the first launch to download people and portraits; successfully saved content remains available offline.
 
-Use Product → Test (⌘U) to run the tests. Unit tests use bundled fixtures and isolated temporary SwiftData databases. The UI browsing test uses the public sample service for its initial online phase.
+No third-party packages, API keys, or app account are required. The project uses **Swift 6 language mode**. Running on a physical iPhone requires selecting your own signing team.
 
-## Decisions
+### Run tests
 
-### Native UI and feature organization
+Use **Product → Test (⌘U)** to run the tests. Unit tests use bundled fixtures and isolated temporary SwiftData databases. The UI browsing test uses the public sample service for its initial online phase.
 
-`People/Browse` and `People/Profile` contain the screens and their view models. `People/Data` holds the domain, response models, repository, and SwiftData implementation. `Portraits`, `Networking`, and `App` provide shared functionality. Small feature directories remain flat, and Xcode follows the directory structure automatically. Full-screen views end in `Screen`; reusable pieces end in `View`.
+## Decisions and tradeoffs
 
-The interface uses standard navigation, lists, sections, semantic colors, and Dynamic Type. Records remain in service order. Sources are shown when provided. Empty occupation/source sections are omitted. Imprecise dates are displayed exactly as supplied, and living people have a “Living” lifespan label. There is no authentication, editing, search, custom navigation chrome, or prefetching of unopened profiles.
+- Files organized by feature. Standard Apple navigation and layouts keep the app familiar. `*Screen` names identify full screens; `*View` names identify reusable pieces and make the project easier to search.
+- MVVM with a repository**.** View models own presentation and loading state; the repository coordinates networking and persistence. I deliberately avoid `@Query` (from SwiftData) in screens to keep those responsibilities separate. The tradeoff is explicitly loading data and assigning updated state.
+- Separate response, storage, and domain models. The agent chose this separation to keep service and persistence details out of the UI. I see its value, but changing a field can require updating three representations and their mappings. I might consider a macro or other code-gen if I were to keep a tri-model design
+- SwiftData for durable storage. It provides a queryable schema and direct person lookup by ID. Saved lists, opened profiles, and portrait bytes survive process termination. A small custom image loader persists originals rather than relying disk cache. There are no third-party dependencies.
+- Explicit loading and failure states. Saved content appears immediately and stays visible if refreshing fails. Empty results are distinct from errors. View models cancel work when screens leave; stale tasks cannot overwrite newer results. Swift 6 checks concurrency boundaries, with storage and decoding work kept off the main actor.
 
-### MVVM and explicit state
 
-Screens render `DataLoadState<Value>` and forward actions; they do not import SwiftData, decode responses, or save records. Observable main-actor view models own these transitions:
 
-- `.initial` → `.loading` while reading saved data and performing a first fetch.
-- `.success(savedContent)` immediately when saved data exists.
-- A separate `VoidDataLoadState` tracks refreshes so a failed refresh cannot erase saved content.
-- `.success([])` represents an empty list; `.error` represents failure without usable content.
-- Cancellation restores a retryable state without displaying an error.
+## Loading flow
 
-Initial loading starts from each view’s `.task`. Retry buttons call a synchronous `model.load()` action; the model owns its task and updates state on the main actor. View disappearance cancels the model’s work, and a replacement load cannot be overwritten by an obsolete result. Pull-to-refresh awaits `model.refresh()` so the native spinner lasts for the operation. Portrait task identity tracks the actual URL and pixel size, never a retry counter.
 
-The generic loading state has no `Codable` constraint because rendering does not require serialization. Domain values are snapshots: repository responses explicitly update the view model. This app does not depend on `@Query` or automatic database observation. Screens refresh on entry and support pull-to-refresh.
 
-### Network and persistence boundaries
+### Successful online loading sequence
 
-`HTTPClient`, `PeopleRepository`, `PeopleStore`, and `PortraitLoading` are injectable interfaces. The URLSession client validates HTTP status and honors cancellation. The repository decodes separate response types, resolves portrait paths against the service URL, validates list counts/IDs and full-profile responses, and saves before returning success.
+Saved content appears first when available; the network refresh still follows.
 
-SwiftData is isolated behind a model actor created away from the main actor. SwiftData model instances do not cross that boundary; callers receive Sendable values. Network decoding and image thumbnail creation also happen off the main actor. Swift 6 checking was enabled to catch unsafe sharing at these boundaries; the starter used Swift 5 language mode.
+```mermaid
+sequenceDiagram
+    participant V as Screen
+    participant VM as View model
+    participant R as Repository
+    participant S as Store
+    participant N as Network
 
-The store has three schema models:
+    V->>VM: load()
+    VM->>R: Request saved content
+    R->>S: Read
+    S-->>R: Saved content or none
+    R-->>VM: Saved content or none
+    VM-->>V: Display saved content if available
+    VM->>R: Refresh content
+    R->>N: Download
+    N-->>R: Response
+    R->>R: Decode and validate
+    R->>S: Save fresh content
+    S-->>R: Save succeeded
+    R-->>VM: Fresh content
+    VM-->>V: Display fresh content
+```
 
-- **StoredPerson:** unique person ID, individual name/life-event fields, optional list order, and an explicit full-profile marker. A predicate with a fetch limit retrieves one person by ID without loading the list.
-- **StoredList:** records that a list was successfully fetched, including a valid empty list.
-- **StoredPortrait:** unique resolved URL and durable image bytes.
 
-Profile-only details are encoded into a per-person payload. This keeps the ordered relatives and citations simple for 16 people; it is not a separately queryable family graph. List updates preserve that payload. Saving a new list updates membership/order but retains previously opened profiles. Writes explicitly save or roll back; save failures are surfaced instead of claiming offline availability. A store-opening failure shows Retry and does not erase the database or fall back to volatile storage.
 
-Connectivity monitoring uses `NWPathMonitor` through an injectable interface. Active list and profile view models observe path changes, preserve saved content on disconnect, and refresh when a path returns. Monitoring stops when the screen leaves. An unavailable path shows “You’re offline”; request timeouts and connection failures show “Couldn’t reach the server.” A usable path is not proof that the service is reachable: 100% packet loss can still require the existing 20-second request timeout before reporting failure.
 
-### Portraits: persistence and display are separate
 
-SwiftData stores original portrait bytes using `@Attribute(.externalStorage)`. The custom loader reads those records before requesting the network, validates downloaded image data, saves it, and prepares a thumbnail for the displayed size. List and profile reuse the same original bytes. Person queries do not fetch portrait bytes.
+### Known-offline loading sequence
 
-A bounded 24 MiB memory cache holds prepared images. Durable portrait records have no eviction policy in this version. Nuke was unnecessary for this small app, and an evictable image cache alone would not satisfy the offline requirement. Portrait failures display an independent placeholder with details and Retry, without blocking the person's text. The immutable CGImage wrapper has the sole explicit unchecked Sendable conformance; it has no mutable state.
+Read saved content, then report that the device is offline without making a network request.
 
-An image is offline-ready after its download and save complete. Force-quitting while a request is still loading cannot preserve unfinished content. Previously opened profiles and successfully displayed portraits remain available across launches. A summary-only profile reached offline shows its known fields and an explicit unavailable-details state.
+```mermaid
+sequenceDiagram
+    participant V as Screen
+    participant VM as View model
+    participant R as Repository
+    participant S as Store
 
-## Verification
+    V->>VM: load()
+    VM->>R: Request saved content
+    R->>S: Read
+    S-->>R: Saved content or none
+    R-->>VM: Saved content or none
+    VM-->>V: Display saved content if available
+    VM->>VM: Check known offline status
+    VM-->>V: Show offline status and Retry
+    Note over VM,S: No network request while known offline
+```
 
-**Results:** A fresh local clone built and launched successfully without configuration edits. 15 focused tests and 3 UI tests passed on the iPhone 17 simulator running iOS 27.0. Large-text screenshots were inspected, including adaptive list rows; dark appearance and standard back navigation are covered by the UI checks.
 
-The focused tests cover decoding, nullable fields, display dates, malformed responses, HTTP errors, state transitions, retry/cancellation, preservation of profile details during list refresh, direct ID lookup, valid empty lists, save failures, image validation, and reopening disk-backed records and portraits without a working network.
 
-UI tests cover a first offline launch with Retry and an online browse → terminate → offline relaunch sequence, including a saved relative profile and persisted portraits. Debug-only launch arguments inject an unavailable transport and use a separate test database; they never reset the normal app store. This makes the offline test independent of URLCache and the machine's connectivity.
+With saved content, the offline message is a nonblocking warning. Without content, the screen shows an error and Retry. When a network path returns, the active view model automatically refreshes. These diagrams assume the store read succeeds; later loads skip that read when content is already displayed.
 
-### Physical-device acceptance sequence
+## Known gaps and what to do differently
 
-1. Launch online and browse the list, waiting for portraits to finish loading.
-2. Open two or three profiles, including one reached through a relative link.
-3. Force-quit, enable Airplane Mode, and relaunch.
-4. Confirm the list, saved portraits, and opened profiles render; follow the previously opened relative again.
-5. Open an unvisited profile and confirm its summary remains visible with an unavailable-details message.
+- I am okay that the agent built the majority of the app, but if I am imagining this is an app I am working on as a team, I'd ensure we have patterns we agree on which include guardrails for the agent. 
+- I'd set a cyclomatic complexity rule (with swiftlint), this keeps an agent from running away on a function and making it overly complicated. Which in turn makes the code simpler to understand for both agent and human alike. I'm  not sure any function is too complex in this sample app, but the agent can ruin things fast.
+- The app is complete per the assignment, but lacks ui appeal, and is especially unpolished around loading and offline.
 
-The simulator has no physical Airplane Mode switch. Automated testing substitutes an unavailable network transport after terminating the process; the literal Airplane Mode sequence still needs a physical-device check.
 
-## Tradeoffs and next steps
 
-- At **100,000 people**, the service needs pagination or incremental synchronization first. Add paged store queries and indexes for chosen filters/sort order; avoid loading or replacing the entire membership set. Normalize relatives if graph queries become necessary, and define a portrait storage budget plus explicit offline pinning/retention behavior.
-- Portrait URLs are treated as stable content identifiers. A changed image at the same URL currently remains saved; a production service should provide a version or validation policy.
-- No cross-device sync, editing, migrations beyond the initial schema, automatic background refresh, or proactive database-change observation. Existing content refreshes on screen entry and user request.
-- Database read errors are surfaced; there is no destructive recovery or silent replacement with an empty database.
-- With another day: add versioned portrait invalidation, shared in-flight request coalescing, deterministic UI service fixtures, broader accessibility/device checks, and a migration test before evolving the schema.
+## With 100,000 people
 
-**Dependencies:** Apple frameworks only (SwiftUI, Observation, SwiftData, Foundation, ImageIO; Swift Testing and XCTest for tests).
+- To support endless amounts of data I'd first work with the backend side to establish a pagination contract for the scrolling experience.
+- Also with the backend plan indexing fields and a search/filtering api, it would be needed with a list that large. Too big a list to scroll to find what you are looking for, and you want results quickly.
+- SwiftData/CoreData is actually purposed for large datasets, I'd keep to that.
+- I am not up-to-date on the scale-ability of Lists { ForEach { } } I've not had problems with hundreds of rows, and I can't imagine someone would scroll thousands of rows, but I'd want to make sure that the mechanism being used can handle the volume. It is UITableView backed, but I know it's had problems in the past.
+- With a paginated api, I'd likely create an automatic load more when offset *n* was reached with a load more/loading footer at the bottom of the list, but hoping the typical user doesn't reach it.
+- Images are persisted right now, depending on the variability and size of the average image, it may be better to cache images instead of persisting them as it could take up a lot of space on disk.
 
-**Time:** Approximately 15 minutes for implementation and verification, excluding the earlier planning discussion. AI assistance was used for implementation, tests, and review; the architecture and tradeoffs above are intended to be discussed in the interview.
+
+
+## With another day
+
+- Custom transition animations
+- Clean-up offline UI
+- Add search/filter/sort
+- In the ViewModels we have a duplication where it is probably worth deduplicating. We query the store, then we query the network. this adds complexity to the view models that I do not like. I'm not married to DRY (Don't Repeat Yourself) in coding, sometimes it can make things more complicated, but in this case, we have a pattern of how we load data, it should load through the same path. Loading through the same mechanism should abstract the complexity out of the ViewModels, right now they are too involved with 'how' data is fetched in my opinion.
+- Research more into the tri-model design
+
+
+
+## Time and AI assistance
+
+Approximately **3 hours**, I charged the agent with creating the app, I gave it some specific instruction
+
+- How to use SwiftData (in particular, do not use @Query).
+- Use my preferred technique of `DataLoadState`. `DataLoadState` itself provides the agent affordance to show loading UI and error/retry UX and it took that up no problem.
+- Stick with standard SwiftUI components initially.
+- Use MVVM for the UI system
+- And a simple controller system (repository) with a basic http client for data fetch
+
+The agent built for about 15 minutes. I spent the rest of the time polishing, inspecting, and improving things lacking or I didn't like for example: The agent added a ui update ticker `@State var retry: Int = 0` This is pretty poor form most of the time. I had the agent update the code to use direct view model interactions instead.
