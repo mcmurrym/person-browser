@@ -29,7 +29,7 @@ final class PeopleViewModel {
     }
 
     private func performLoad() async {
-        guard !Task.isCancelled else { return }
+        guard Task.isNotCancelled else { return }
         do {
             if state.value == nil {
                 state = .loading
@@ -43,8 +43,8 @@ final class PeopleViewModel {
             state = .success(people)
             refreshState = .success
         } catch {
-            // A replaced task must not overwrite its successor's state.
-            guard !Task.isCancelled else { return }
+            // This guard prevents a cancelled task from overwriting state after a new load or explicit cancellation.
+            guard Task.isNotCancelled else { return }
             if isCancellation(error) {
                 if state.value == nil { state = .initial }
                 refreshState = .initial

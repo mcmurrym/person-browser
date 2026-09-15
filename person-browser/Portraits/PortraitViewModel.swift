@@ -27,14 +27,15 @@ final class PortraitViewModel {
     }
 
     private func performLoad(_ request: PortraitRequest) async {
-        guard !Task.isCancelled else { return }
+        guard Task.isNotCancelled else { return }
         state = .loading
         do {
             let image = try await loader.image(url: request.url, pixels: request.pixels)
             try Task.checkCancellation()
             state = .success(image)
         } catch {
-            guard !Task.isCancelled else { return }
+            // This guard prevents a cancelled task from overwriting state after a new load or explicit cancellation.
+            guard Task.isNotCancelled else { return }
             if isCancellation(error) { state = .initial }
             else { state = .error(error) }
         }

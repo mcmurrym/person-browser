@@ -20,14 +20,15 @@ final class AppViewModel {
     }
 
     private func performLoad() async {
-        guard !Task.isCancelled else { return }
+        guard Task.isNotCancelled else { return }
         state = .loading
         do {
             let services = try await AppServices.make()
             try Task.checkCancellation()
             state = .success(services)
         } catch {
-            guard !Task.isCancelled else { return }
+            // This guard prevents a cancelled task from overwriting state after a new load or explicit cancellation.
+            guard Task.isNotCancelled else { return }
             state = isCancellation(error) ? .initial : .error(error)
         }
     }

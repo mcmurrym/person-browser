@@ -45,7 +45,7 @@ nonisolated struct PersonResponse: Decodable, Sendable {
     let lastModified: String?
 
     func person(baseURL: URL, fullProfile: Bool) throws -> Person {
-        guard !id.isEmpty,
+        guard id.isNotEmpty,
               let url = URL(string: portraitUrl, relativeTo: baseURL)?.absoluteURL,
               url.scheme == "https", url.host == baseURL.host else { throw BrowserError.invalidResponse }
         var details: ProfileDetails?

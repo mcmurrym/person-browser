@@ -49,7 +49,7 @@ struct PersonProfileScreen: View {
                 }
             }
             if let details = person.details {
-                if let occupation = details.occupation, !occupation.isEmpty {
+                if let occupation = details.occupation, occupation.isNotEmpty {
                     Section("Occupation") { Text(occupation) }
                 }
                 Section("Biography") {
@@ -67,7 +67,7 @@ struct PersonProfileScreen: View {
                         }
                     }
                 }
-                if !details.sources.isEmpty {
+                if details.sources.isNotEmpty {
                     Section("Sources") {
                         ForEach(Array(details.sources.enumerated()), id: \.offset) { _, source in
                             VStack(alignment: .leading, spacing: 4) {
