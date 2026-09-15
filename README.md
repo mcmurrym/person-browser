@@ -27,6 +27,7 @@ Use **Product → Test (⌘U)** to run the tests. Unit tests use bundled fixture
 - Separate response, storage, and domain models. The agent chose this separation to keep service and persistence details out of the UI. I see its value, but changing a field can require updating three representations and their mappings. I might consider a macro or other code-gen if I were to keep a tri-model design
 - SwiftData for durable storage. It provides a queryable schema and direct person lookup by ID. Saved lists, opened profiles, and portrait bytes survive process termination. A small custom image loader persists originals rather than relying disk cache. There are no third-party dependencies.
 - Explicit loading and failure states. Saved content appears immediately and stays visible if refreshing fails. Empty results are distinct from errors. View models cancel work when screens leave; stale tasks cannot overwrite newer results. Swift 6 checks concurrency boundaries, with storage and decoding work kept off the main actor.
+- Testing. Testing that data is not overwritten or removed when offline, or a request fails are probably the most important tests for this app. I typically avoid UI Tests unless the are absolutely needed; they are often brittle and high maintanence. 
 
 
 
