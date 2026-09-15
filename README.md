@@ -52,7 +52,7 @@ An image is offline-ready after its download and save complete. Force-quitting w
 
 ## Verification
 
-**Results:** 14 focused tests and 3 UI tests passed on the iPhone 17 simulator running iOS 27.0. Large-text screenshots were inspected, including adaptive list rows; dark appearance and standard back navigation are covered by the UI checks.
+**Results:** A fresh local clone built and launched successfully without configuration edits. 14 focused tests and 3 UI tests passed on the iPhone 17 simulator running iOS 27.0. Large-text screenshots were inspected, including adaptive list rows; dark appearance and standard back navigation are covered by the UI checks.
 
 The focused tests cover decoding, nullable fields, display dates, malformed responses, HTTP errors, state transitions, retry/cancellation, preservation of profile details during list refresh, direct ID lookup, valid empty lists, save failures, image validation, and reopening disk-backed records and portraits without a working network.
 

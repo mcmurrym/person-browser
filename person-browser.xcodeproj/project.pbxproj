@@ -5,61 +5,28 @@
 	};
 	objectVersion = 90;
 	objects = {
-AB0100000000000000000002 = { isa = PBXFileSystemSynchronizedRootGroup; path = PersonBrowserTests; sourceTree = "<group>"; };
-AB0100000000000000000003 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-AB0100000000000000000004 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0100000000000000000005 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0100000000000000000006 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0100000000000000000007 = { isa = XCConfigurationList; buildConfigurations = (AB0100000000000000000008, AB0100000000000000000009,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-AB010000000000000000000B = { isa = PBXContainerItemProxy; containerPortal = 000000000000000000000000; proxyType = 1; remoteGlobalIDString = 000000000000000100000000; remoteInfo = "person-browser"; };
-AB010000000000000000000A = { isa = PBXTargetDependency; target = 000000000000000100000000; targetProxy = AB010000000000000000000B; };
-AB0100000000000000000008 = { isa = XCBuildConfiguration; name = Debug; buildSettings = {
-            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests"; PRODUCT_NAME = "$(TARGET_NAME)";
-            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
-            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser"; BUNDLE_LOADER = "$(TEST_HOST)";
-        }; };
-AB0100000000000000000009 = { isa = XCBuildConfiguration; name = Release; buildSettings = {
-            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests"; PRODUCT_NAME = "$(TARGET_NAME)";
-            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
-            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser"; BUNDLE_LOADER = "$(TEST_HOST)";
-        }; };
-AB0100000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserTests; productName = PersonBrowserTests; productReference = AB0100000000000000000003;
-        productType = "com.apple.product-type.bundle.unit-test"; buildConfigurationList = AB0100000000000000000007;
-        buildPhases = (AB0100000000000000000004, AB0100000000000000000005, AB0100000000000000000006,); buildRules = (); dependencies = (AB010000000000000000000A,);
-        fileSystemSynchronizedGroups = (AB0100000000000000000002,); };
-AB0200000000000000000002 = { isa = PBXFileSystemSynchronizedRootGroup; path = PersonBrowserUITests; sourceTree = "<group>"; };
-AB0200000000000000000003 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-AB0200000000000000000004 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0200000000000000000005 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0200000000000000000006 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-AB0200000000000000000007 = { isa = XCConfigurationList; buildConfigurations = (AB0200000000000000000008, AB0200000000000000000009,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-AB020000000000000000000B = { isa = PBXContainerItemProxy; containerPortal = 000000000000000000000000; proxyType = 1; remoteGlobalIDString = 000000000000000100000000; remoteInfo = "person-browser"; };
-AB020000000000000000000A = { isa = PBXTargetDependency; target = 000000000000000100000000; targetProxy = AB020000000000000000000B; };
-AB0200000000000000000008 = { isa = XCBuildConfiguration; name = Debug; buildSettings = {
-            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests"; PRODUCT_NAME = "$(TARGET_NAME)";
-            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
-            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_TARGET_NAME = "person-browser";
-        }; };
-AB0200000000000000000009 = { isa = XCBuildConfiguration; name = Release; buildSettings = {
-            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests"; PRODUCT_NAME = "$(TARGET_NAME)";
-            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
-            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_TARGET_NAME = "person-browser";
-        }; };
-AB0200000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserUITests; productName = PersonBrowserUITests; productReference = AB0200000000000000000003;
-        productType = "com.apple.product-type.bundle.ui-testing"; buildConfigurationList = AB0200000000000000000007;
-        buildPhases = (AB0200000000000000000004, AB0200000000000000000005, AB0200000000000000000006,); buildRules = (); dependencies = (AB020000000000000000000A,);
-        fileSystemSynchronizedGroups = (AB0200000000000000000002,); };
+
+/* Begin PBXContainerItemProxy section */
+		AB010000000000000000000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "person-browser";
+		};
+		AB020000000000000000000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "person-browser";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* person-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "person-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0100000000000000000003 /* PersonBrowserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0200000000000000000003 /* PersonBrowserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -68,10 +35,30 @@ AB0200000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserUITests;
 			path = "person-browser";
 			sourceTree = "<group>";
 		};
+		AB0100000000000000000002 /* PersonBrowserTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PersonBrowserTests;
+			sourceTree = "<group>";
+		};
+		AB0200000000000000000002 /* PersonBrowserUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PersonBrowserUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AB0100000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AB0200000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -84,9 +71,8 @@ AB0200000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserUITests;
 			children = (
 				000000000000000000000010 /* person-browser */,
 				000000000000000000000020 /* Products */,
-AB0100000000000000000002,
-AB0200000000000000000002,
-
+				AB0100000000000000000002 /* PersonBrowserTests */,
+				AB0200000000000000000002 /* PersonBrowserUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +80,8 @@ AB0200000000000000000002,
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* person-browser.app */,
+				AB0100000000000000000003 /* PersonBrowserTests.xctest */,
+				AB0200000000000000000003 /* PersonBrowserUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +106,48 @@ AB0200000000000000000002,
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* person-browser.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AB0100000000000000000001 /* PersonBrowserTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0100000000000000000007 /* Build configuration list for PBXNativeTarget "PersonBrowserTests" */;
+			buildPhases = (
+				AB0100000000000000000004 /* Sources */,
+				AB0100000000000000000005 /* Frameworks */,
+				AB0100000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB010000000000000000000A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB0100000000000000000002 /* PersonBrowserTests */,
+			);
+			name = PersonBrowserTests;
+			productName = PersonBrowserTests;
+			productReference = AB0100000000000000000003 /* PersonBrowserTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AB0200000000000000000001 /* PersonBrowserUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0200000000000000000007 /* Build configuration list for PBXNativeTarget "PersonBrowserUITests" */;
+			buildPhases = (
+				AB0200000000000000000004 /* Sources */,
+				AB0200000000000000000005 /* Frameworks */,
+				AB0200000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB020000000000000000000A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB0200000000000000000002 /* PersonBrowserUITests */,
+			);
+			name = PersonBrowserUITests;
+			productName = PersonBrowserUITests;
+			productReference = AB0200000000000000000003 /* PersonBrowserUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -148,8 +178,8 @@ AB0200000000000000000002,
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-AB0100000000000000000001,
-AB0200000000000000000001,
+				AB0100000000000000000001 /* PersonBrowserTests */,
+				AB0200000000000000000001 /* PersonBrowserUITests */,
 				000000000000000100000000 /* person-browser */,
 			);
 		};
@@ -157,6 +187,16 @@ AB0200000000000000000001,
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AB0100000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AB0200000000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -169,7 +209,30 @@ AB0200000000000000000001,
 			files = (
 			);
 		};
+		AB0100000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		AB0200000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AB010000000000000000000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* person-browser */;
+			targetProxy = AB010000000000000000000B /* PBXContainerItemProxy */;
+		};
+		AB020000000000000000000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* person-browser */;
+			targetProxy = AB020000000000000000000B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "person-browser" */ = {
@@ -390,6 +453,100 @@ AB0200000000000000000001,
 			};
 			name = Release;
 		};
+		AB0100000000000000000008 /* Debug configuration for PBXNativeTarget "PersonBrowserTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J3DWM3SH7G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser";
+			};
+			name = Debug;
+		};
+		AB0100000000000000000009 /* Release configuration for PBXNativeTarget "PersonBrowserTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J3DWM3SH7G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser";
+			};
+			name = Release;
+		};
+		AB0200000000000000000008 /* Debug configuration for PBXNativeTarget "PersonBrowserUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J3DWM3SH7G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "person-browser";
+			};
+			name = Debug;
+		};
+		AB0200000000000000000009 /* Release configuration for PBXNativeTarget "PersonBrowserUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J3DWM3SH7G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "person-browser";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -406,6 +563,22 @@ AB0200000000000000000001,
 			buildConfigurations = (
 				000000000000000111000000 /* Debug configuration for PBXNativeTarget "person-browser" */,
 				000000000000000112000000 /* Release configuration for PBXNativeTarget "person-browser" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AB0100000000000000000007 /* Build configuration list for PBXNativeTarget "PersonBrowserTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB0100000000000000000008 /* Debug configuration for PBXNativeTarget "PersonBrowserTests" */,
+				AB0100000000000000000009 /* Release configuration for PBXNativeTarget "PersonBrowserTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AB0200000000000000000007 /* Build configuration list for PBXNativeTarget "PersonBrowserUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB0200000000000000000008 /* Debug configuration for PBXNativeTarget "PersonBrowserUITests" */,
+				AB0200000000000000000009 /* Release configuration for PBXNativeTarget "PersonBrowserUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
