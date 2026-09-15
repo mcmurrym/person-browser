@@ -9,10 +9,9 @@ A small native iPhone app for browsing records and navigating relatives, includi
    git clone https://github.com/mcmurrym/person-browser.git
    cd person-browser
   ```
-2. **Install Xcode 26 or 27 if needed.** Download Xcode from the [Mac App Store](https://apps.apple.com/app/xcode/id497799835) or [Apple Developer Downloads](https://developer.apple.com/download/all/). Open it once and complete any first-launch component installation. Development and validation used **Xcode 27.0 RC**; Xcode 26 has not been separately verified.
+2. **Install Xcode 26 or 27 if needed.** Download Xcode from the [Mac App Store](https://apps.apple.com/app/xcode/id497799835) or [Apple Developer Downloads](https://developer.apple.com/download/all/). Open it once and complete any first-launch component installation. 
 3. **Open the project in Xcode.** Choose **File → Open** and select `person-browser.xcodeproj` from the cloned repository.
-4. **Install an iPhone simulator runtime if needed.** In **Xcode → Settings → Components**, download an **iOS 26.0 or newer** simulator runtime supported by your Xcode version. You can also use the download option in Xcode’s run destination selector. See [Apple’s simulator installation guide](https://developer.apple.com/documentation/xcode/downloading-and-installing-additional-xcode-components).
-5. **Run the app.** Select the **person-browser** scheme and an installed **iPhone simulator** in the toolbar, then press **Run (⌘R)**. Use an internet connection for the first launch to download people and portraits; successfully saved content remains available offline.
+4. **Run the app.** Select the **person-browser** scheme and an installed **iPhone simulator** in the toolbar, then press **Run (⌘R)**. Use an internet connection for the first launch to download people and portraits; successfully saved content remains available offline.
 
 No third-party packages, API keys, or app account are required. The project uses **Swift 6 language mode**. Running on a physical iPhone requires selecting your own signing team.
 
