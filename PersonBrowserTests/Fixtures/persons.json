@@ -1,0 +1,322 @@
+{
+  "updated": "2026-08-14",
+  "count": 16,
+  "persons": [
+    {
+      "id": "R9PJ-5MX",
+      "name": {
+        "given": "Hannah",
+        "surname": "Ainsley"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "about 1814",
+        "year": 1814,
+        "place": "Whitby, Yorkshire, England"
+      },
+      "death": {
+        "date": "29 September 1888",
+        "year": 1888,
+        "place": "Lancaster, Lancaster, Pennsylvania, United States"
+      },
+      "portraitUrl": "portraits/R9PJ-5MX.jpg"
+    },
+    {
+      "id": "K7LF-4DW",
+      "name": {
+        "given": "Rosalie",
+        "surname": "Beauchemin"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "2 May 1819",
+        "year": 1819,
+        "place": "Trois-Rivieres, Quebec, Canada"
+      },
+      "death": {
+        "date": "1891",
+        "year": 1891,
+        "place": "Lyon, Rhone, France"
+      },
+      "portraitUrl": "portraits/K7LF-4DW.jpg"
+    },
+    {
+      "id": "W5NC-6GK",
+      "name": {
+        "given": "Marguerite",
+        "surname": "Beaulieu"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "18 August 1872",
+        "year": 1872,
+        "place": "Trois-Rivieres, Quebec, Canada"
+      },
+      "death": {
+        "date": "6 April 1954",
+        "year": 1954,
+        "place": "Ogden, Weber, Utah, United States"
+      },
+      "portraitUrl": "portraits/W5NC-6GK.jpg"
+    },
+    {
+      "id": "B4ZT-9HR",
+      "name": {
+        "given": "Solomon",
+        "surname": "Beaulieu"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "1844",
+        "year": 1844,
+        "place": "Dundee, Angus, Scotland"
+      },
+      "death": {
+        "date": "1910",
+        "year": 1910,
+        "place": "Trois-Rivieres, Quebec, Canada"
+      },
+      "portraitUrl": "portraits/B4ZT-9HR.jpg"
+    },
+    {
+      "id": "J9VK-6PR",
+      "name": {
+        "given": "Yusuf",
+        "surname": "Demirci"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "14 February 1898",
+        "year": 1898,
+        "place": "Izmir, Turkey"
+      },
+      "death": {
+        "date": "28 July 1975",
+        "year": 1975,
+        "place": "Ogden, Weber, Utah, United States"
+      },
+      "portraitUrl": "portraits/J9VK-6PR.jpg"
+    },
+    {
+      "id": "G8WN-3LB",
+      "name": {
+        "given": "Clementine",
+        "surname": "Dubois"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "7 June 1842",
+        "year": 1842,
+        "place": "Lyon, Rhone, France"
+      },
+      "death": {
+        "date": "14 February 1919",
+        "year": 1919,
+        "place": "Nauvoo, Hancock, Illinois, United States"
+      },
+      "portraitUrl": "portraits/G8WN-3LB.jpg"
+    },
+    {
+      "id": "V3QB-8TN",
+      "name": {
+        "given": "Henri",
+        "surname": "Dubois"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "1815",
+        "year": 1815,
+        "place": "Lyon, Rhone, France"
+      },
+      "death": {
+        "date": "1880",
+        "year": 1880,
+        "place": "Lyon, Rhone, France"
+      },
+      "portraitUrl": "portraits/V3QB-8TN.jpg"
+    },
+    {
+      "id": "N8MP-1VD",
+      "name": {
+        "given": "Nora",
+        "surname": "Fitzgibbon"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "about 1848",
+        "year": 1848,
+        "place": "Galway, County Galway, Ireland"
+      },
+      "death": {
+        "date": "11 December 1921",
+        "year": 1921,
+        "place": "Trois-Rivieres, Quebec, Canada"
+      },
+      "portraitUrl": "portraits/N8MP-1VD.jpg"
+    },
+    {
+      "id": "P3BN-5XC",
+      "name": {
+        "given": "Ingrid",
+        "surname": "Lindqvist"
+      },
+      "sex": "female",
+      "living": true,
+      "birth": {
+        "date": "1931",
+        "year": 1931,
+        "place": "Manchester, Lancashire, England"
+      },
+      "death": null,
+      "portraitUrl": "portraits/P3BN-5XC.jpg"
+    },
+    {
+      "id": "H5TD-2WJ",
+      "name": {
+        "given": "Oskar",
+        "surname": "Lindqvist"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "1893",
+        "year": 1893,
+        "place": "Malmo, Skane, Sweden"
+      },
+      "death": {
+        "date": "1961",
+        "year": 1961,
+        "place": "Manchester, Lancashire, England"
+      },
+      "portraitUrl": "portraits/H5TD-2WJ.jpg"
+    },
+    {
+      "id": "F1GS-8NL",
+      "name": {
+        "given": "Ada",
+        "surname": "Whitcomb"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "22 November 1901",
+        "year": 1901,
+        "place": "Ogden, Weber, Utah, United States"
+      },
+      "death": {
+        "date": "5 March 1989",
+        "year": 1989,
+        "place": "Ogden, Weber, Utah, United States"
+      },
+      "portraitUrl": "portraits/F1GS-8NL.jpg"
+    },
+    {
+      "id": "M2KD-7QP",
+      "name": {
+        "given": "Amos",
+        "surname": "Whitcomb"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "about 1838",
+        "year": 1838,
+        "place": "Lancaster, Lancaster, Pennsylvania, United States"
+      },
+      "death": {
+        "date": "21 January 1903",
+        "year": 1903,
+        "place": "Nauvoo, Hancock, Illinois, United States"
+      },
+      "portraitUrl": "portraits/M2KD-7QP.jpg"
+    },
+    {
+      "id": "T6HV-2CZ",
+      "name": {
+        "given": "Bartholomew",
+        "surname": "Whitcomb"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "1810",
+        "year": 1810,
+        "place": "Whitby, Yorkshire, England"
+      },
+      "death": {
+        "date": "1877",
+        "year": 1877,
+        "place": "Lancaster, Lancaster, Pennsylvania, United States"
+      },
+      "portraitUrl": "portraits/T6HV-2CZ.jpg"
+    },
+    {
+      "id": "D6YW-3KQ",
+      "name": {
+        "given": "Cormac",
+        "surname": "Whitcomb"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "4 July 1897",
+        "year": 1897,
+        "place": "Nauvoo, Hancock, Illinois, United States"
+      },
+      "death": {
+        "date": "9 October 1917",
+        "year": 1917,
+        "place": "Passchendaele, West Flanders, Belgium"
+      },
+      "portraitUrl": "portraits/D6YW-3KQ.jpg"
+    },
+    {
+      "id": "L4RX-9FT",
+      "name": {
+        "given": "Ezra",
+        "surname": "Whitcomb"
+      },
+      "sex": "male",
+      "living": false,
+      "birth": {
+        "date": "12 March 1868",
+        "year": 1868,
+        "place": "Nauvoo, Hancock, Illinois, United States"
+      },
+      "death": {
+        "date": "3 November 1941",
+        "year": 1941,
+        "place": "Ogden, Weber, Utah, United States"
+      },
+      "portraitUrl": "portraits/L4RX-9FT.jpg"
+    },
+    {
+      "id": "C2JX-7BF",
+      "name": {
+        "given": "Ruth",
+        "surname": "Whitcomb"
+      },
+      "sex": "female",
+      "living": false,
+      "birth": {
+        "date": "30 January 1895",
+        "year": 1895,
+        "place": "Nauvoo, Hancock, Illinois, United States"
+      },
+      "death": {
+        "date": "17 May 1978",
+        "year": 1978,
+        "place": "Manchester, Lancashire, England"
+      },
+      "portraitUrl": "portraits/C2JX-7BF.jpg"
+    }
+  ]
+}

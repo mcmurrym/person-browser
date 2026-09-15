@@ -1,0 +1,95 @@
+{
+  "id": "L4RX-9FT",
+  "name": {
+    "given": "Ezra",
+    "surname": "Whitcomb"
+  },
+  "sex": "male",
+  "living": false,
+  "birth": {
+    "date": "12 March 1868",
+    "year": 1868,
+    "place": "Nauvoo, Hancock, Illinois, United States"
+  },
+  "death": {
+    "date": "3 November 1941",
+    "year": 1941,
+    "place": "Ogden, Weber, Utah, United States"
+  },
+  "portraitUrl": "portraits/L4RX-9FT.jpg",
+  "occupation": "Wheelwright",
+  "biography": "Apprenticed to his father in Nauvoo and moved west with his wife in 1897, where he kept a wheelwright's shop on Washington Avenue for thirty-one years.",
+  "relatives": [
+    {
+      "id": "M2KD-7QP",
+      "relationship": "father",
+      "name": {
+        "given": "Amos",
+        "surname": "Whitcomb"
+      },
+      "birthYear": 1838,
+      "deathYear": 1903
+    },
+    {
+      "id": "G8WN-3LB",
+      "relationship": "mother",
+      "name": {
+        "given": "Clementine",
+        "surname": "Dubois"
+      },
+      "birthYear": 1842,
+      "deathYear": 1919
+    },
+    {
+      "id": "W5NC-6GK",
+      "relationship": "spouse",
+      "name": {
+        "given": "Marguerite",
+        "surname": "Beaulieu"
+      },
+      "birthYear": 1872,
+      "deathYear": 1954
+    },
+    {
+      "id": "C2JX-7BF",
+      "relationship": "daughter",
+      "name": {
+        "given": "Ruth",
+        "surname": "Whitcomb"
+      },
+      "birthYear": 1895,
+      "deathYear": 1978
+    },
+    {
+      "id": "D6YW-3KQ",
+      "relationship": "son",
+      "name": {
+        "given": "Cormac",
+        "surname": "Whitcomb"
+      },
+      "birthYear": 1897,
+      "deathYear": 1917
+    },
+    {
+      "id": "F1GS-8NL",
+      "relationship": "daughter",
+      "name": {
+        "given": "Ada",
+        "surname": "Whitcomb"
+      },
+      "birthYear": 1901,
+      "deathYear": 1989
+    }
+  ],
+  "sources": [
+    {
+      "title": "Illinois, County Marriages, 1810-1940",
+      "citation": "Hancock County, vol. 7, p. 214"
+    },
+    {
+      "title": "United States Census, 1900",
+      "citation": "Ogden City, Weber, Utah, sheet 12B"
+    }
+  ],
+  "lastModified": "2026-08-14T09:21:00Z"
+}

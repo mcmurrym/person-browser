@@ -5,6 +5,58 @@
 	};
 	objectVersion = 90;
 	objects = {
+AB0100000000000000000002 = { isa = PBXFileSystemSynchronizedRootGroup; path = PersonBrowserTests; sourceTree = "<group>"; };
+AB0100000000000000000003 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+AB0100000000000000000004 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0100000000000000000005 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0100000000000000000006 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0100000000000000000007 = { isa = XCConfigurationList; buildConfigurations = (AB0100000000000000000008, AB0100000000000000000009,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+AB010000000000000000000B = { isa = PBXContainerItemProxy; containerPortal = 000000000000000000000000; proxyType = 1; remoteGlobalIDString = 000000000000000100000000; remoteInfo = "person-browser"; };
+AB010000000000000000000A = { isa = PBXTargetDependency; target = 000000000000000100000000; targetProxy = AB010000000000000000000B; };
+AB0100000000000000000008 = { isa = XCBuildConfiguration; name = Debug; buildSettings = {
+            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests"; PRODUCT_NAME = "$(TARGET_NAME)";
+            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
+            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser"; BUNDLE_LOADER = "$(TEST_HOST)";
+        }; };
+AB0100000000000000000009 = { isa = XCBuildConfiguration; name = Release; buildSettings = {
+            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserTests"; PRODUCT_NAME = "$(TARGET_NAME)";
+            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
+            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_HOST = "$(BUILT_PRODUCTS_DIR)/person-browser.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/person-browser"; BUNDLE_LOADER = "$(TEST_HOST)";
+        }; };
+AB0100000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserTests; productName = PersonBrowserTests; productReference = AB0100000000000000000003;
+        productType = "com.apple.product-type.bundle.unit-test"; buildConfigurationList = AB0100000000000000000007;
+        buildPhases = (AB0100000000000000000004, AB0100000000000000000005, AB0100000000000000000006,); buildRules = (); dependencies = (AB010000000000000000000A,);
+        fileSystemSynchronizedGroups = (AB0100000000000000000002,); };
+AB0200000000000000000002 = { isa = PBXFileSystemSynchronizedRootGroup; path = PersonBrowserUITests; sourceTree = "<group>"; };
+AB0200000000000000000003 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = PersonBrowserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+AB0200000000000000000004 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0200000000000000000005 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0200000000000000000006 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+AB0200000000000000000007 = { isa = XCConfigurationList; buildConfigurations = (AB0200000000000000000008, AB0200000000000000000009,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+AB020000000000000000000B = { isa = PBXContainerItemProxy; containerPortal = 000000000000000000000000; proxyType = 1; remoteGlobalIDString = 000000000000000100000000; remoteInfo = "person-browser"; };
+AB020000000000000000000A = { isa = PBXTargetDependency; target = 000000000000000100000000; targetProxy = AB020000000000000000000B; };
+AB0200000000000000000008 = { isa = XCBuildConfiguration; name = Debug; buildSettings = {
+            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests"; PRODUCT_NAME = "$(TARGET_NAME)";
+            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
+            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_TARGET_NAME = "person-browser";
+        }; };
+AB0200000000000000000009 = { isa = XCBuildConfiguration; name = Release; buildSettings = {
+            GENERATE_INFOPLIST_FILE = YES; SWIFT_VERSION = 6.0; SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+            PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.person-browser.PersonBrowserUITests"; PRODUCT_NAME = "$(TARGET_NAME)";
+            TARGETED_DEVICE_FAMILY = 1; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+            IPHONEOS_DEPLOYMENT_TARGET = 26.0; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = J3DWM3SH7G;
+            LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"); TEST_TARGET_NAME = "person-browser";
+        }; };
+AB0200000000000000000001 = { isa = PBXNativeTarget; name = PersonBrowserUITests; productName = PersonBrowserUITests; productReference = AB0200000000000000000003;
+        productType = "com.apple.product-type.bundle.ui-testing"; buildConfigurationList = AB0200000000000000000007;
+        buildPhases = (AB0200000000000000000004, AB0200000000000000000005, AB0200000000000000000006,); buildRules = (); dependencies = (AB020000000000000000000A,);
+        fileSystemSynchronizedGroups = (AB0200000000000000000002,); };
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* person-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "person-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,6 +84,9 @@
 			children = (
 				000000000000000000000010 /* person-browser */,
 				000000000000000000000020 /* Products */,
+AB0100000000000000000002,
+AB0200000000000000000002,
+
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +148,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+AB0100000000000000000001,
+AB0200000000000000000001,
 				000000000000000100000000 /* person-browser */,
 			);
 		};
@@ -257,6 +314,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Person Browser";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -267,7 +325,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
@@ -283,7 +341,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 26.6;
 			};
@@ -299,6 +357,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Person Browser";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -309,7 +368,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
@@ -325,7 +384,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 26.6;
 			};
